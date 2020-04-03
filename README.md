@@ -1,6 +1,6 @@
 # The Kings 👑
 
-In thesprit of NAG, I will create a nice API for kings data. API should be documented first in Swagger. When application is done, it should be registered in Docker registry and deployed to Azure.   
+In the sprit of NAG, I will create a nice API for kings data. API should be documented first in Swagger. When application is done, it should be registered in Docker registry and deployed to Azure.   
 
 - /kings/stats: returns analytics on data. Include caching or memoization (not to process too much).
 {
