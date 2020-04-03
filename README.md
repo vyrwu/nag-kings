@@ -10,4 +10,4 @@ In the sprit of NAG, I will create a nice API for kings data. API should be docu
 	mostCommonFirstName: string
 }
 - /kings: It will return unchanged kings data. Simple redirect. See `kingsData.json` for example payload.
-
+- /swagger : It will serve Swagger UI specification for the API
