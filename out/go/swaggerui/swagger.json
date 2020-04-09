@@ -1,0 +1,134 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "Kings API",
+        "description": "This is a sample Kings Server based on the OpenAPI 3.0 specification.",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "email": "dev.anowak@gmail.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "0.1.0"
+    },
+    "externalDocs": {
+        "description": "Find out more about Swagger",
+        "url": "http://swagger.io"
+    },
+    "servers": [
+        {
+            "url": "/api/v1"
+        }
+    ],
+    "tags": [
+        {
+            "name": "kings",
+            "description": "Everything about Kings"
+        }
+    ],
+    "paths": {
+        "/kings": {
+            "get": {
+                "tags": [
+                    "kings"
+                ],
+                "summary": "Get kings data",
+                "description": "Get all available kings data",
+                "operationId": "getKings",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/King"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Upsie, something went wrong on our end. Please try again later."
+                    }
+                }
+            }
+        },
+        "/kings/statistics": {
+            "get": {
+                "tags": [
+                    "kings"
+                ],
+                "summary": "Shows statistics about Kings",
+                "operationId": "getKingsStatistics",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "totalKings": {
+                                            "type": "integer",
+                                            "format": "int64",
+                                            "example": 22
+                                        },
+                                        "longestRulingKing": {
+                                            "$ref": "#/components/schemas/King"
+                                        },
+                                        "longestRulingHouse": {
+                                            "type": "string",
+                                            "example": "House of Wessex"
+                                        },
+                                        "mostCommonFirstName": {
+                                            "type": "string",
+                                            "example": "Athelstan"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Upsie, something went wrong on our end. Please try again later."
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "King": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 2
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Athelstan"
+                    },
+                    "city": {
+                        "type": "string",
+                        "example": "United Kingdom"
+                    },
+                    "house": {
+                        "type": "string",
+                        "example": "House of Wessex"
+                    },
+                    "years": {
+                        "type": "string",
+                        "description": "Range of years the king rule over",
+                        "example": "899-925"
+                    }
+                }
+            }
+        }
+    }
+}
