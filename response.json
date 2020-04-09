@@ -1,0 +1,401 @@
+[
+    {
+        "id": 1,
+        "name": "Edward the Elder",
+        "city": "United Kingdom",
+        "house": "House of Wessex",
+        "years": "899-925"
+    },
+    {
+        "id": 2,
+        "name": "Athelstan",
+        "city": "United Kingdom",
+        "house": "House of Wessex",
+        "years": "925-940"
+    },
+    {
+        "id": 3,
+        "name": "Edmund",
+        "city": "United Kingdom",
+        "house": "House of Wessex",
+        "years": "940-946"
+    },
+    {
+        "id": 4,
+        "name": "Edred",
+        "city": "United Kingdom",
+        "house": "House of Wessex",
+        "years": "946-955"
+    },
+    {
+        "id": 5,
+        "name": "Edwy",
+        "city": "United Kingdom",
+        "house": "House of Wessex",
+        "years": "955-959"
+    },
+    {
+        "id": 6,
+        "name": "Edgar",
+        "city": "United Kingdom",
+        "house": "House of Wessex",
+        "years": "959-975"
+    },
+    {
+        "id": 7,
+        "name": "Edward the Martyr",
+        "city": "United Kingdom",
+        "house": "House of Wessex",
+        "years": "975-978"
+    },
+    {
+        "id": 8,
+        "name": "Ethelred II the Unready",
+        "city": "United Kingdom",
+        "house": "House of Wessex",
+        "years": "978-1016"
+    },
+    {
+        "id": 9,
+        "name": "Edmund lronside",
+        "city": "United Kingdom",
+        "house": "House of Wessex",
+        "years": "1016"
+    },
+    {
+        "id": 10,
+        "name": "Cnut",
+        "city": "United Kingdom",
+        "house": "House of Denmark",
+        "years": "1016-1035"
+    },
+    {
+        "id": 11,
+        "name": "Harold I Harefoot",
+        "city": "United Kingdom",
+        "house": "House of Denmark",
+        "years": "1035-1040"
+    },
+    {
+        "id": 12,
+        "name": "Harthacanut",
+        "city": "United Kingdom",
+        "house": "House of Denmark",
+        "years": "1040-1042"
+    },
+    {
+        "id": 13,
+        "name": "Edward the Confessor",
+        "city": "United Kingdom",
+        "house": "House of Wessex",
+        "years": "1042-1066"
+    },
+    {
+        "id": 14,
+        "name": "Harold II",
+        "city": "United Kingdom",
+        "house": "House of Wessex",
+        "years": "1066"
+    },
+    {
+        "id": 15,
+        "name": "William I",
+        "city": "United Kingdom",
+        "house": "House of Normandy",
+        "years": "1066-1087"
+    },
+    {
+        "id": 16,
+        "name": "William II",
+        "city": "United Kingdom",
+        "house": "House of Normandy",
+        "years": "1087-1100"
+    },
+    {
+        "id": 17,
+        "name": "Henry I",
+        "city": "United Kingdom",
+        "house": "House of Normandy",
+        "years": "1100-1135"
+    },
+    {
+        "id": 18,
+        "name": "Stephen",
+        "city": "United Kingdom",
+        "house": "House of Blois",
+        "years": "1135-1154"
+    },
+    {
+        "id": 19,
+        "name": "Henry II",
+        "city": "United Kingdom",
+        "house": "House of Angevin",
+        "years": "1154-1189"
+    },
+    {
+        "id": 20,
+        "name": "Richard I",
+        "city": "United Kingdom",
+        "house": "House of Angevin",
+        "years": "1189-1199"
+    },
+    {
+        "id": 21,
+        "name": "John",
+        "city": "United Kingdom",
+        "house": "House of Angevin",
+        "years": "1199-1216"
+    },
+    {
+        "id": 22,
+        "name": "Henry III",
+        "city": "United Kingdom",
+        "house": "House of Plantagenet",
+        "years": "1216-1272"
+    },
+    {
+        "id": 23,
+        "name": "Edward I",
+        "city": "United Kingdom",
+        "house": "House of Plantagenet",
+        "years": "1272-1307"
+    },
+    {
+        "id": 24,
+        "name": "Edward II",
+        "city": "United Kingdom",
+        "house": "House of Plantagenet",
+        "years": "1307-1327"
+    },
+    {
+        "id": 25,
+        "name": "Edward III",
+        "city": "United Kingdom",
+        "house": "House of Plantagenet",
+        "years": "1327-1377"
+    },
+    {
+        "id": 26,
+        "name": "Richard II",
+        "city": "United Kingdom",
+        "house": "House of Plantagenet",
+        "years": "1377-1399"
+    },
+    {
+        "id": 27,
+        "name": "Henry IV",
+        "city": "United Kingdom",
+        "house": "House of Lancaster",
+        "years": "1399-1413"
+    },
+    {
+        "id": 28,
+        "name": "Henry V",
+        "city": "United Kingdom",
+        "house": "House of Lancaster",
+        "years": "1413-1422"
+    },
+    {
+        "id": 29,
+        "name": "Henry VI",
+        "city": "United Kingdom",
+        "house": "House of Lancaster",
+        "years": "1422-1461"
+    },
+    {
+        "id": 30,
+        "name": "Edward IV",
+        "city": "United Kingdom",
+        "house": "House of York",
+        "years": "1461-1483"
+    },
+    {
+        "id": 31,
+        "name": "Edward V",
+        "city": "United Kingdom",
+        "house": "House of York",
+        "years": "1483"
+    },
+    {
+        "id": 32,
+        "name": "Richard III",
+        "city": "United Kingdom",
+        "house": "House of York",
+        "years": "1483-1485"
+    },
+    {
+        "id": 33,
+        "name": "Henry VII",
+        "city": "United Kingdom",
+        "house": "House of Tudor",
+        "years": "1485-1509"
+    },
+    {
+        "id": 34,
+        "name": "Henry VIII",
+        "city": "United Kingdom",
+        "house": "House of Tudor",
+        "years": "1509-1547"
+    },
+    {
+        "id": 35,
+        "name": "Edward VI",
+        "city": "United Kingdom",
+        "house": "House of Tudor",
+        "years": "1547-1553"
+    },
+    {
+        "id": 36,
+        "name": "Mary I",
+        "city": "United Kingdom",
+        "house": "House of Tudor",
+        "years": "1553-1558"
+    },
+    {
+        "id": 37,
+        "name": "Elizabeth I",
+        "city": "United Kingdom",
+        "house": "House of Tudor",
+        "years": "1558-1603"
+    },
+    {
+        "id": 38,
+        "name": "James I",
+        "city": "United Kingdom",
+        "house": "House of Stuart",
+        "years": "1603-1625"
+    },
+    {
+        "id": 39,
+        "name": "Charles I",
+        "city": "United Kingdom",
+        "house": "House of Stuart",
+        "years": "1625-1649"
+    },
+    {
+        "id": 40,
+        "name": "Commonwealth",
+        "city": "United Kingdom",
+        "house": "Commonwealth",
+        "years": "1649-1653"
+    },
+    {
+        "id": 41,
+        "name": "Oliver Cromwell",
+        "city": "United Kingdom",
+        "house": "Commonwealth",
+        "years": "1653-1658"
+    },
+    {
+        "id": 42,
+        "name": "Richard Cromwell",
+        "city": "United Kingdom",
+        "house": "Commonwealth",
+        "years": "1658-1659"
+    },
+    {
+        "id": 43,
+        "name": "Charles II",
+        "city": "United Kingdom",
+        "house": "House of Stuart",
+        "years": "1660-1685"
+    },
+    {
+        "id": 44,
+        "name": "James II",
+        "city": "United Kingdom",
+        "house": "House of Stuart",
+        "years": "1685-1688"
+    },
+    {
+        "id": 45,
+        "name": "William III",
+        "city": "United Kingdom",
+        "house": "House of Orange",
+        "years": "1689-1694"
+    },
+    {
+        "id": 46,
+        "name": "Anne",
+        "city": "United Kingdom",
+        "house": "House of Stuart",
+        "years": "1702-1714"
+    },
+    {
+        "id": 47,
+        "name": "George I",
+        "city": "United Kingdom",
+        "house": "House of Hanover",
+        "years": "1714-1727"
+    },
+    {
+        "id": 48,
+        "name": "George II",
+        "city": "United Kingdom",
+        "house": "House of Hanover",
+        "years": "1727-1760"
+    },
+    {
+        "id": 49,
+        "name": "George III",
+        "city": "United Kingdom",
+        "house": "House of Hanover",
+        "years": "1760-1820"
+    },
+    {
+        "id": 50,
+        "name": "George IV",
+        "city": "United Kingdom",
+        "house": "House of Hanover",
+        "years": "1820-1830"
+    },
+    {
+        "id": 51,
+        "name": "William IV",
+        "city": "United Kingdom",
+        "house": "House of Hanover",
+        "years": "1830-1837"
+    },
+    {
+        "id": 52,
+        "name": "Victoria",
+        "city": "United Kingdom",
+        "house": "House of Hanover",
+        "years": "1837-1901"
+    },
+    {
+        "id": 53,
+        "name": "Edward VII",
+        "city": "United Kingdom",
+        "house": "House of Saxe-Coburg-Gotha",
+        "years": "1901-1910"
+    },
+    {
+        "id": 54,
+        "name": "George V",
+        "city": "United Kingdom",
+        "house": "House of Windsor",
+        "years": "1910-1936"
+    },
+    {
+        "id": 55,
+        "name": "Edward VIII",
+        "city": "United Kingdom",
+        "house": "House of Windsor",
+        "years": "1936"
+    },
+    {
+        "id": 56,
+        "name": "George VI",
+        "city": "United Kingdom",
+        "house": "House of Windsor",
+        "years": "1936-1952"
+    },
+    {
+        "id": 57,
+        "name": "Elizabeth II",
+        "city": "United Kingdom",
+        "house": "House of Windsor",
+        "years": "1952-"
+    }
+]
