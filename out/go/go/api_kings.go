@@ -11,9 +11,11 @@ package swagger
 
 import (
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -86,51 +88,54 @@ func GetKingsStatistics(w http.ResponseWriter, r *http.Request) {
 
 	json.Unmarshal(body, &kingsRawArray)
 
-	var longestRulingKingRaw *KingRaw
-	var longestYearsRuled int
+	// var longestRulingKingRaw *KingRaw
+	// var longestYearsRuled int
+	kingByYearsRuled := make(map[KingRaw]int)
 	houseByYearsRuled := make(map[string]int)
-	kingsByFirstNameFrequency := make(map[string]int)
+	kingsFirstNameCounter := make(map[string]int)
 	for _, kingRaw := range kingsRawArray {
 
+		// Get years ruled as int
 		yrs := kingRaw.Yrs
-		// if contains - but only one number, then take todays year
-		splitYears := strings.Split(yrs, "-")
-		if len(splitYears) < 2 {
-			continue
+		yearsRuled, err := calculateYearsRuledFromString(yrs)
+		if err != nil {
+			panic(err)
 		}
 
-		var splitYearsInt []int
-		for _, year := range splitYears {
-			i, err := strconv.Atoi(year)
-			if err != nil {
-				if year != "" {
-					panic(err)
-				}
-				i = time.Now().Year()
-			}
-			splitYearsInt = append(splitYearsInt, i)
-		}
+		currentYearsRulingForKing := kingByYearsRuled[kingRaw]
+		kingByYearsRuled[kingRaw] = currentYearsRulingForKing + yearsRuled
 
-		yearsRuled := splitYearsInt[1] - splitYearsInt[0]
-
-		if yearsRuled >= longestYearsRuled {
-			// what if there's more kings that ruled the same
-			// what if theres only one numbered king
-			longestRulingKingRaw = &kingRaw
-		}
+		// if yearsRuled >= longestYearsRuled {
+		// 	longestYearsRuled = yearsRuled
+		// 	// what if there's more kings that ruled the same
+		// 	// what if theres only one numbered king
+		// 	longestRulingKingRaw = &kingRaw
+		// }
 
 		hse := kingRaw.Hse
-		houseRulingYears := houseByYearsRuled[hse]
-		houseByYearsRuled[hse] = houseRulingYears + yearsRuled
+		updateYearsRuledForHouse(houseByYearsRuled, yearsRuled, hse)
 
 		nm := kingRaw.Nm
-		fnm := strings.Split(nm, " ")[0]
-		if val, ok := kingsByFirstNameFrequency[fnm]; ok {
-			kingsByFirstNameFrequency[fnm] = val + 1
-		} else {
-			kingsByFirstNameFrequency[fnm] = 1
-		}
+		firstName := strings.Split(nm, " ")[0]
+		incrementKingsNameCounter(kingsFirstNameCounter, firstName)
 	}
+
+	type kingRule struct {
+		King       KingRaw
+		YearsRuled int
+	}
+	var kingRulings []kingRule
+	for k, v := range kingByYearsRuled {
+		kingRulings = append(kingRulings, kingRule{
+			King:       k,
+			YearsRuled: v,
+		})
+	}
+	sort.Slice(kingRulings, func(i, j int) bool {
+		return kingRulings[i].YearsRuled > kingRulings[j].YearsRuled
+	})
+
+	longestRulingKingRaw := kingRulings[0].King
 
 	type house struct {
 		Name       string
@@ -151,14 +156,13 @@ func GetKingsStatistics(w http.ResponseWriter, r *http.Request) {
 		Frequency int
 	}
 	var mostCommonFirstName nameFrequency
-	for k, v := range kingsByFirstNameFrequency {
+	for k, v := range kingsFirstNameCounter {
 		if v >= mostCommonFirstName.Frequency {
 			mostCommonFirstName = nameFrequency{
 				Name:      k,
 				Frequency: v,
 			}
 		}
-		log.Println(k, v)
 	}
 
 	statistics := InlineResponse200{
@@ -182,4 +186,43 @@ func GetKingsStatistics(w http.ResponseWriter, r *http.Request) {
 	w.Write(response)
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
+}
+
+func calculateYearsRuledFromString(yearsRuledString string) (int, error) {
+	splitYears := strings.Split(yearsRuledString, "-")
+	if len(splitYears) == 1 {
+		return 1, nil
+	}
+
+	if len(splitYears) > 2 {
+		return -1, errors.New("More than two years in range")
+	}
+
+	var splitYearsInt []int
+	for _, year := range splitYears {
+		i, err := strconv.Atoi(year)
+		if err != nil {
+			if year != "" {
+				return -1, err
+			}
+			i = time.Now().Year()
+		}
+		splitYearsInt = append(splitYearsInt, i)
+	}
+
+	yearsRuled := splitYearsInt[1] - splitYearsInt[0]
+	return yearsRuled, nil
+}
+
+func updateYearsRuledForHouse(houseByYearsRuled map[string]int, yearsRuled int, houseName string) {
+	currentHouseRulingYears := houseByYearsRuled[houseName]
+	houseByYearsRuled[houseName] = currentHouseRulingYears + yearsRuled
+}
+
+func incrementKingsNameCounter(kingsFirstNameCounter map[string]int, firstName string) {
+	if _, ok := kingsFirstNameCounter[firstName]; ok {
+		kingsFirstNameCounter[firstName]++
+	} else {
+		kingsFirstNameCounter[firstName] = 1
+	}
 }
