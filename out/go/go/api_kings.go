@@ -15,7 +15,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -88,9 +87,11 @@ func GetKingsStatistics(w http.ResponseWriter, r *http.Request) {
 
 	json.Unmarshal(body, &kingsRawArray)
 
-	// var longestRulingKingRaw *KingRaw
-	// var longestYearsRuled int
-	kingByYearsRuled := make(map[KingRaw]int)
+	type kingRuling struct {
+		King   KingRaw
+		Length int
+	}
+	var longestRuling []kingRuling
 	houseByYearsRuled := make(map[string]int)
 	kingsFirstNameCounter := make(map[string]int)
 	for _, kingRaw := range kingsRawArray {
@@ -102,15 +103,21 @@ func GetKingsStatistics(w http.ResponseWriter, r *http.Request) {
 			panic(err)
 		}
 
-		currentYearsRulingForKing := kingByYearsRuled[kingRaw]
-		kingByYearsRuled[kingRaw] = currentYearsRulingForKing + yearsRuled
-
-		// if yearsRuled >= longestYearsRuled {
-		// 	longestYearsRuled = yearsRuled
-		// 	// what if there's more kings that ruled the same
-		// 	// what if theres only one numbered king
-		// 	longestRulingKingRaw = &kingRaw
-		// }
+		if (longestRuling == nil) || (longestRuling[0].Length == yearsRuled) {
+			longestRuling = append(longestRuling, kingRuling{
+				King:   kingRaw,
+				Length: yearsRuled,
+			})
+		} else {
+			if longestRuling[0].Length < yearsRuled {
+				longestRuling = []kingRuling{
+					kingRuling{
+						King:   kingRaw,
+						Length: yearsRuled,
+					},
+				}
+			}
+		}
 
 		hse := kingRaw.Hse
 		updateYearsRuledForHouse(houseByYearsRuled, yearsRuled, hse)
@@ -120,22 +127,7 @@ func GetKingsStatistics(w http.ResponseWriter, r *http.Request) {
 		incrementKingsNameCounter(kingsFirstNameCounter, firstName)
 	}
 
-	type kingRule struct {
-		King       KingRaw
-		YearsRuled int
-	}
-	var kingRulings []kingRule
-	for k, v := range kingByYearsRuled {
-		kingRulings = append(kingRulings, kingRule{
-			King:       k,
-			YearsRuled: v,
-		})
-	}
-	sort.Slice(kingRulings, func(i, j int) bool {
-		return kingRulings[i].YearsRuled > kingRulings[j].YearsRuled
-	})
-
-	longestRulingKingRaw := kingRulings[0].King
+	longestRulingKingRaw := longestRuling[0].King
 
 	type house struct {
 		Name       string
