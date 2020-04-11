@@ -52,7 +52,7 @@
                         }
                     },
                     "500": {
-                        "description": "Upsie, something went wrong on our end. Please try again later."
+                        "description": "Internal Server Error"
                     }
                 }
             }
@@ -70,31 +70,13 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "totalKings": {
-                                            "type": "integer",
-                                            "format": "int64",
-                                            "example": 22
-                                        },
-                                        "longestRulingKing": {
-                                            "$ref": "#/components/schemas/King"
-                                        },
-                                        "longestRulingHouse": {
-                                            "type": "string",
-                                            "example": "House of Wessex"
-                                        },
-                                        "mostCommonFirstName": {
-                                            "type": "string",
-                                            "example": "Athelstan"
-                                        }
-                                    }
-                                }
+                                    "$ref": "#component/schemas/KingsStatistics"
+                                } 
                             }
                         }
                     },
                     "500": {
-                        "description": "Upsie, something went wrong on our end. Please try again later."
+                        "description": "Internal Server Error"
                     }
                 }
             }
@@ -107,7 +89,6 @@
                 "properties": {
                     "id": {
                         "type": "integer",
-                        "format": "int64",
                         "example": 2
                     },
                     "name": {
@@ -126,6 +107,55 @@
                         "type": "string",
                         "description": "Range of years the king rule over",
                         "example": "899-925"
+                    }
+                }
+            },
+            "KingsStatistics": {
+                "type": "object",
+                "properties": {
+                    "totalKings": {
+                        "type": "integer",
+                        "example": 22
+                    },
+                    "longestRulingKing": {
+                        "type": "object",
+                        "properties": {
+                            "king": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/King"
+                                }
+                            },
+                            "yearsRuled": {
+                                "type": "integer",
+                                "format": "int64",
+                                "example": 68
+                            }
+                        }
+                    },
+                    "longestRulingHouse": {
+                        "type": "object",
+                        "properties": {
+                            "houseName": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string",
+                                    "example": "House of Wessex"
+                                }
+                            },
+                            "yearsRuled": {
+                                "type": "integer",
+                                "format": "int64",
+                                "example": 125
+                            }
+                        }
+                    },
+                    "mostCommonFirstName": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "example": "Athelstan"    
+                        }
                     }
                 }
             }

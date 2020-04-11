@@ -87,87 +87,119 @@ func GetKingsStatistics(w http.ResponseWriter, r *http.Request) {
 
 	json.Unmarshal(body, &kingsRawArray)
 
-	type kingRuling struct {
-		King   KingRaw
-		Length int
-	}
-	var longestRuling []kingRuling
+	kingByYearsRuled := make(map[King]int)
 	houseByYearsRuled := make(map[string]int)
 	kingsFirstNameCounter := make(map[string]int)
 	for _, kingRaw := range kingsRawArray {
 
-		// Get years ruled as int
-		yrs := kingRaw.Yrs
-		yearsRuled, err := calculateYearsRuledFromString(yrs)
+		king := King{
+			ID:    kingRaw.ID,
+			Name:  kingRaw.Nm,
+			City:  kingRaw.Cty,
+			House: kingRaw.Hse,
+			Years: kingRaw.Yrs,
+		}
+
+		yearsRuled, err := calculateYearsRuledFromString(king.Years)
 		if err != nil {
 			panic(err)
 		}
 
-		if (longestRuling == nil) || (longestRuling[0].Length == yearsRuled) {
-			longestRuling = append(longestRuling, kingRuling{
-				King:   kingRaw,
-				Length: yearsRuled,
-			})
-		} else {
-			if longestRuling[0].Length < yearsRuled {
-				longestRuling = []kingRuling{
-					kingRuling{
-						King:   kingRaw,
-						Length: yearsRuled,
-					},
-				}
-			}
-		}
+		currentKingRulingYears := kingByYearsRuled[king]
+		kingByYearsRuled[king] = currentKingRulingYears + yearsRuled
 
-		hse := kingRaw.Hse
-		updateYearsRuledForHouse(houseByYearsRuled, yearsRuled, hse)
+		currentHouseRulingYears := houseByYearsRuled[king.House]
+		houseByYearsRuled[king.House] = currentHouseRulingYears + yearsRuled
 
 		nm := kingRaw.Nm
 		firstName := strings.Split(nm, " ")[0]
-		incrementKingsNameCounter(kingsFirstNameCounter, firstName)
-	}
-
-	longestRulingKingRaw := longestRuling[0].King
-
-	type house struct {
-		Name       string
-		YearsRuled int
-	}
-	var longestRulingHouse house
-	for k, v := range houseByYearsRuled {
-		if v >= longestRulingHouse.YearsRuled {
-			longestRulingHouse = house{
-				Name:       k,
-				YearsRuled: v,
-			}
+		if _, ok := kingsFirstNameCounter[firstName]; ok {
+			kingsFirstNameCounter[firstName]++
+		} else {
+			kingsFirstNameCounter[firstName] = 1
 		}
 	}
 
-	type nameFrequency struct {
-		Name      string
-		Frequency int
-	}
-	var mostCommonFirstName nameFrequency
-	for k, v := range kingsFirstNameCounter {
-		if v >= mostCommonFirstName.Frequency {
-			mostCommonFirstName = nameFrequency{
-				Name:      k,
-				Frequency: v,
+	longestRulingKing := make(chan *KingsStatisticsLongestRulingKing)
+	go func() {
+		getLongestRulingKing := func(kingByYearsRuled map[King]int) *KingsStatisticsLongestRulingKing {
+			var longestRulingKing KingsStatisticsLongestRulingKing
+			for k, v := range kingByYearsRuled {
+				if (longestRulingKing.YearsRuled == 0) || longestRulingKing.YearsRuled == v {
+					longestRulingKing = KingsStatisticsLongestRulingKing{
+						King:       append(longestRulingKing.King, k),
+						YearsRuled: v,
+					}
+				} else {
+					if v > longestRulingKing.YearsRuled {
+						longestRulingKing = KingsStatisticsLongestRulingKing{
+							King:       []King{k},
+							YearsRuled: v,
+						}
+					}
+				}
 			}
+			return &longestRulingKing
 		}
-	}
+		longestRulingKing <- getLongestRulingKing(kingByYearsRuled)
+	}()
 
-	statistics := InlineResponse200{
-		TotalKings: int64(len(kingsRawArray)),
-		LongestRulingKing: &King{
-			ID:    longestRulingKingRaw.ID,
-			Name:  longestRulingKingRaw.Nm,
-			City:  longestRulingKingRaw.Cty,
-			House: longestRulingKingRaw.Hse,
-			Years: longestRulingKingRaw.Yrs,
-		},
-		LongestRulingHouse:  longestRulingHouse.Name,
-		MostCommonFirstName: mostCommonFirstName.Name,
+	longestRulingHouse := make(chan *KingsStatisticsLongestRulingHouse)
+	go func() {
+		getLongestRulingHouse := func(houseByYearsRuled map[string]int) *KingsStatisticsLongestRulingHouse {
+			var longestRulingHouse KingsStatisticsLongestRulingHouse
+			for k, v := range houseByYearsRuled {
+				if (longestRulingHouse.YearsRuled == 0) || longestRulingHouse.YearsRuled == v {
+					longestRulingHouse = KingsStatisticsLongestRulingHouse{
+						HouseName:  append(longestRulingHouse.HouseName, k),
+						YearsRuled: v,
+					}
+				} else {
+					if v > longestRulingHouse.YearsRuled {
+						longestRulingHouse = KingsStatisticsLongestRulingHouse{
+							HouseName:  []string{k},
+							YearsRuled: v,
+						}
+					}
+				}
+			}
+			return &longestRulingHouse
+		}
+		longestRulingHouse <- getLongestRulingHouse(houseByYearsRuled)
+	}()
+
+	mostCommonFirstName := make(chan []string)
+	go func() {
+		getMostCommonFirstName := func(kingsFirstNameCounter map[string]int) []string {
+			type firstNameCounter struct {
+				FirstName []string
+				Count     int
+			}
+			var counter firstNameCounter
+			for k, v := range kingsFirstNameCounter {
+				if (counter.Count == 0) || counter.Count == v {
+					counter = firstNameCounter{
+						FirstName: append(counter.FirstName, k),
+						Count:     v,
+					}
+				}
+				if v >= counter.Count {
+					counter = firstNameCounter{
+						FirstName: []string{k},
+						Count:     v,
+					}
+				}
+			}
+			return counter.FirstName
+		}
+		mostCommonFirstName <- getMostCommonFirstName(kingsFirstNameCounter)
+	}()
+
+	statistics := KingsStatistics{
+		TotalKings:          len(kingsRawArray),
+		LongestRulingKing:   <-longestRulingKing,
+		LongestRulingHouse:  <-longestRulingHouse,
+		MostCommonFirstName: <-mostCommonFirstName,
 	}
 
 	response, err := json.Marshal(statistics)
@@ -204,17 +236,4 @@ func calculateYearsRuledFromString(yearsRuledString string) (int, error) {
 
 	yearsRuled := splitYearsInt[1] - splitYearsInt[0]
 	return yearsRuled, nil
-}
-
-func updateYearsRuledForHouse(houseByYearsRuled map[string]int, yearsRuled int, houseName string) {
-	currentHouseRulingYears := houseByYearsRuled[houseName]
-	houseByYearsRuled[houseName] = currentHouseRulingYears + yearsRuled
-}
-
-func incrementKingsNameCounter(kingsFirstNameCounter map[string]int, firstName string) {
-	if _, ok := kingsFirstNameCounter[firstName]; ok {
-		kingsFirstNameCounter[firstName]++
-	} else {
-		kingsFirstNameCounter[firstName] = 1
-	}
 }

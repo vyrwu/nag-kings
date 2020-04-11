@@ -1,0 +1,24 @@
+{
+    "totalKings": 57,
+    "longestRulingKing": {
+        "king": [
+            {
+                "id": 57,
+                "name": "Elizabeth II",
+                "city": "United Kingdom",
+                "house": "House of Windsor",
+                "years": "1952-"
+            }
+        ],
+        "yearsRuled": 68
+    },
+    "longestRulingHouse": {
+        "houseName": [
+            "House of Hanover"
+        ],
+        "yearsRuled": 187
+    },
+    "mostCommonFirstName": [
+        "Edward"
+    ]
+}
