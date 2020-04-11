@@ -1,3 +1,2 @@
 swagger-codegen-cli.jar
-/out/csharp
-/out/javascript
+/out

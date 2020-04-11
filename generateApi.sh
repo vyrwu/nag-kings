@@ -1,4 +1,4 @@
-docker run --rm -v ${PWD}:/local --network="host" swaggerapi/swagger-codegen-cli generate \
--i http://localhost:8080/swagger.json \
--l js \
--o /local/out/js
+java -jar swagger-codegen-cli.jar generate \
+-i ./swaggerui/swagger.json \
+-l go \
+-o /out/go
