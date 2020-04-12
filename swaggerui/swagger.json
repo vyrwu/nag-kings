@@ -70,7 +70,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#component/schemas/KingsStatistics"
+                                    "$ref": "#components/schemas/KingsStatistics"
                                 } 
                             }
                         }
@@ -159,6 +159,17 @@
                     }
                 }
             }
+        },
+        "securitySchemes": {
+            "basicAuth": {
+                "type": "http",
+                "scheme": "basic"
+            }
         }
-    }
+    },
+    "security": [
+        {
+            "basicAuth": []
+        }
+    ]
 }

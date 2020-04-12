@@ -91,7 +91,6 @@ func GetKingsStatistics(w http.ResponseWriter, r *http.Request) {
 	houseByYearsRuled := make(map[string]int)
 	kingsFirstNameCounter := make(map[string]int)
 	for _, kingRaw := range kingsRawArray {
-
 		king := King{
 			ID:    kingRaw.ID,
 			Name:  kingRaw.Nm,
@@ -207,8 +206,8 @@ func GetKingsStatistics(w http.ResponseWriter, r *http.Request) {
 		log.Fatalln(err)
 	}
 
-	w.Write(response)
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.Write(response)
 	w.WriteHeader(http.StatusOK)
 }
 
