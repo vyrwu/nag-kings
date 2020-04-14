@@ -28,8 +28,9 @@ func main() {
 	fs := http.FileServer(http.Dir("./swaggerui"))
 	router.PathPrefix("/swaggerui").Handler(http.StripPrefix("/swaggerui/", fs))
 
-	// go http.ListenAndServe(":8080", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	// 	http.Redirect(w, r, "https://"+r.Host+r.URL.String(), http.StatusMovedPermanently)
+	// go http.ListenAndServe(":80", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	// 	http.Redirect(w, r, "https://"+r.Host+r.URL.String()+":443", http.StatusMovedPermanently)
 	// }))
-	log.Fatal(http.ListenAndServeTLS(":8081", "./cert/localhost.crt", "./cert/localhost.key", router))
+
+	log.Fatal(http.ListenAndServe(":8081", router))
 }

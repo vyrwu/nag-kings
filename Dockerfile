@@ -7,7 +7,11 @@ COPY go.mod .
 COPY go.sum .
 RUN go mod download
 
-COPY . .
+
+COPY swaggerui/ ./swaggerui/
+COPY cert/ ./cert/
+COPY go/ ./go/
+COPY main.go .
 
 RUN GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o main
 
