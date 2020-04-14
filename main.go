@@ -10,6 +10,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"net/http"
 
@@ -17,12 +18,19 @@ import (
 )
 
 func main() {
-	log.Printf("Server started")
+	insecureSSL := flag.Bool("insecure-ssl", false, "Allow certificates from unrecognized CAs")
+	flag.Parse()
 
+	log.Println("Server started with flags: insecure-ssl", *insecureSSL)
+
+	// TODO: http to https redirect
 	router := sw.NewRouter()
 
 	fs := http.FileServer(http.Dir("./swaggerui"))
 	router.PathPrefix("/swaggerui").Handler(http.StripPrefix("/swaggerui/", fs))
 
-	log.Fatal(http.ListenAndServe(":8081", router))
+	// go http.ListenAndServe(":8080", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	// 	http.Redirect(w, r, "https://"+r.Host+r.URL.String(), http.StatusMovedPermanently)
+	// }))
+	log.Fatal(http.ListenAndServeTLS(":8081", "./cert/localhost.crt", "./cert/localhost.key", router))
 }
