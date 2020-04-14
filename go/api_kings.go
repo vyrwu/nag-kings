@@ -119,76 +119,9 @@ func GetKingsStatistics(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	longestRulingKingOut := make(chan *KingsStatisticsLongestRulingKing)
-	go func() {
-		var longestRulingKing KingsStatisticsLongestRulingKing
-		for k, v := range kingByYearsRuled {
-			if (longestRulingKing.YearsRuled == 0) || longestRulingKing.YearsRuled == v {
-				longestRulingKing = KingsStatisticsLongestRulingKing{
-					King:       append(longestRulingKing.King, k),
-					YearsRuled: v,
-				}
-			} else {
-				if v > longestRulingKing.YearsRuled {
-					longestRulingKing = KingsStatisticsLongestRulingKing{
-						King:       []King{k},
-						YearsRuled: v,
-					}
-				}
-			}
-		}
-		// function calls create new frames in stack. They are expensive, and should be used
-		// only when neccessary
-		longestRulingKingOut <- &longestRulingKing
-		close(longestRulingKingOut)
-	}()
-
-	longestRulingHouseOut := make(chan *KingsStatisticsLongestRulingHouse)
-	go func() {
-		var longestRulingHouse KingsStatisticsLongestRulingHouse
-		for k, v := range houseByYearsRuled {
-			if (longestRulingHouse.YearsRuled == 0) || longestRulingHouse.YearsRuled == v {
-				longestRulingHouse = KingsStatisticsLongestRulingHouse{
-					HouseName:  append(longestRulingHouse.HouseName, k),
-					YearsRuled: v,
-				}
-			} else {
-				if v > longestRulingHouse.YearsRuled {
-					longestRulingHouse = KingsStatisticsLongestRulingHouse{
-						HouseName:  []string{k},
-						YearsRuled: v,
-					}
-				}
-			}
-		}
-		longestRulingHouseOut <- &longestRulingHouse
-		close(longestRulingHouseOut)
-	}()
-
-	mostCommonFirstNameOut := make(chan []string)
-	go func() {
-		type firstNameCounter struct {
-			FirstName []string
-			Count     int
-		}
-		var counter firstNameCounter
-		for k, v := range kingsFirstNameCounter {
-			if (counter.Count == 0) || counter.Count == v {
-				counter = firstNameCounter{
-					FirstName: append(counter.FirstName, k),
-					Count:     v,
-				}
-			}
-			if v >= counter.Count {
-				counter = firstNameCounter{
-					FirstName: []string{k},
-					Count:     v,
-				}
-			}
-		}
-		mostCommonFirstNameOut <- counter.FirstName
-		close(mostCommonFirstNameOut)
-	}()
+	longestRulingKingOut := calculateLongestRulingKing(kingByYearsRuled)
+	longestRulingHouseOut := calculateLongestRulingHouse(houseByYearsRuled)
+	mostCommonFirstNameOut := calculateMostCommonFirstName(kingsFirstNameCounter)
 
 	statistics := KingsStatistics{
 		TotalKings:          len(kingsRawArray),
@@ -231,4 +164,77 @@ func calculateYearsRuledFromString(yearsRuledString string) (int, error) {
 
 	yearsRuled := splitYearsInt[1] - splitYearsInt[0]
 	return yearsRuled, nil
+}
+
+func calculateLongestRulingKing(kingsByYearsRuled map[King]int) <-chan *KingsStatisticsLongestRulingKing {
+	out := make(chan *KingsStatisticsLongestRulingKing)
+	go func() {
+		var lrk KingsStatisticsLongestRulingKing
+		for k, y := range kingsByYearsRuled {
+			if y < lrk.YearsRuled {
+				continue
+			}
+			nk := []King{k}
+			if (lrk.YearsRuled == 0) || lrk.YearsRuled == y {
+				nk = append(nk, lrk.King...)
+			}
+			lrk = KingsStatisticsLongestRulingKing{
+				King:       nk,
+				YearsRuled: y,
+			}
+		}
+		out <- &lrk
+		close(out)
+	}()
+	return out
+}
+
+func calculateLongestRulingHouse(houseByYearsRuled map[string]int) <-chan *KingsStatisticsLongestRulingHouse {
+	out := make(chan *KingsStatisticsLongestRulingHouse)
+	go func() {
+		var lrh KingsStatisticsLongestRulingHouse
+		for h, y := range houseByYearsRuled {
+			if y < lrh.YearsRuled {
+				continue
+			}
+			nh := []string{h}
+			if (lrh.YearsRuled == 0) || lrh.YearsRuled == y {
+				nh = append(nh, lrh.HouseName...)
+			}
+			lrh = KingsStatisticsLongestRulingHouse{
+				HouseName:  nh,
+				YearsRuled: y,
+			}
+		}
+		out <- &lrh
+		close(out)
+	}()
+	return out
+}
+
+func calculateMostCommonFirstName(kingsFirstNameCounter map[string]int) <-chan []string {
+	out := make(chan []string)
+	go func() {
+		type counter struct {
+			FirstName []string
+			Count     int
+		}
+		var co counter
+		for n, c := range kingsFirstNameCounter {
+			if c < co.Count {
+				continue
+			}
+			nn := []string{n}
+			if (co.Count == 0) || co.Count == c {
+				nn = append(nn, co.FirstName...)
+			}
+			co = counter{
+				FirstName: nn,
+				Count:     c,
+			}
+		}
+		out <- co.FirstName
+		close(out)
+	}()
+	return out
 }
