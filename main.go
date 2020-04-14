@@ -10,7 +10,6 @@
 package main
 
 import (
-	"flag"
 	"log"
 	"net/http"
 
@@ -18,10 +17,10 @@ import (
 )
 
 func main() {
-	insecureSSL := flag.Bool("insecure-ssl", false, "Allow certificates from unrecognized CAs")
-	flag.Parse()
+	// insecureSSL := flag.Bool("insecure-ssl", false, "Allow certificates from unrecognized CAs")
+	// flag.Parse()
 
-	log.Println("Server started with flags: insecure-ssl", *insecureSSL)
+	log.Println("Server started")
 
 	// TODO: http to https redirect
 	router := sw.NewRouter()
