@@ -1,3 +1,4 @@
 swagger-codegen-cli.jar
 /out
 authBase64
+/cert

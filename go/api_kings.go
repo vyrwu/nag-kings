@@ -140,7 +140,10 @@ func GetKingsStatistics(w http.ResponseWriter, r *http.Request) {
 			}
 			return &longestRulingKing
 		}
+		// function calls create new frames in stack. They are expensive, and should be used
+		// only when neccessary
 		longestRulingKing <- getLongestRulingKing(kingByYearsRuled)
+		close(longestRulingKing)
 	}()
 
 	longestRulingHouse := make(chan *KingsStatisticsLongestRulingHouse)
@@ -165,6 +168,7 @@ func GetKingsStatistics(w http.ResponseWriter, r *http.Request) {
 			return &longestRulingHouse
 		}
 		longestRulingHouse <- getLongestRulingHouse(houseByYearsRuled)
+		close(longestRulingHouse)
 	}()
 
 	mostCommonFirstName := make(chan []string)
@@ -192,6 +196,7 @@ func GetKingsStatistics(w http.ResponseWriter, r *http.Request) {
 			return counter.FirstName
 		}
 		mostCommonFirstName <- getMostCommonFirstName(kingsFirstNameCounter)
+		close(mostCommonFirstName)
 	}()
 
 	statistics := KingsStatistics{
